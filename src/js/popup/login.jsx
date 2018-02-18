@@ -5,17 +5,18 @@ export default class MyComp extends React.Component {
     super(opts);
 
     this.state = {
-      user: "user",
-      pass: "pass"
+      user: "",
+      pass: ""
     };
   }
 
   handleField(field, e) {
     const val = e.target.value;
 
-    this.setState({
+    this.setState(state => ({
+      ...state,
       [field]: val
-    });
+    }));
   }
 
   handleLogin() {
@@ -28,10 +29,9 @@ export default class MyComp extends React.Component {
     return (
       <div
         style={{
-          position: "absolute",
+          position: "relative",
           height: "500px",
           width: "360px",
-          boxShadow: "rgba(0, 0, 0, 0.3) 0px 1px 4px 0px",
           overflow: "hidden"
         }}
       >
@@ -86,6 +86,7 @@ export default class MyComp extends React.Component {
             }}
             value={this.state.user}
             onChange={this.handleField.bind(this, "user")}
+            placeholder="username"
           />
           <input
             style={{
@@ -104,23 +105,26 @@ export default class MyComp extends React.Component {
             value={this.state.pass}
             onChange={this.handleField.bind(this, "pass")}
             type="password"
+            placeholder="password"
           />
-          <span
-            style={{
-              display: "block",
-              position: "absolute",
-              top: "202px",
-              left: "94px",
-              overflow: "hidden",
-              fontSize: "19.04px",
-              width: "79px",
-              cursor: "pointer",
-              textAlign: "center"
-            }}
-            onClick={this.handleLogin.bind(this)}
-          >
-            Login
-          </span>
+          {!this.props.loading && (
+            <span
+              style={{
+                display: "block",
+                position: "absolute",
+                top: "202px",
+                left: "94px",
+                overflow: "hidden",
+                fontSize: "19.04px",
+                width: "79px",
+                cursor: "pointer",
+                textAlign: "center"
+              }}
+              onClick={this.handleLogin.bind(this)}
+            >
+              Login
+            </span>
+          )}
           <span
             style={{
               display: "block",
