@@ -1,9 +1,24 @@
 {
-  "name": "Chrome Extension Webpack",
+  "name": "MultyMask",
   "options_page": "options.html",
   "background": {
-    "page": "background.html"
+    "persistent": false,
+    "scripts": [
+      "background.bundle.js"
+    ]
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.bundle.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": "logo.png"
@@ -12,6 +27,8 @@
     "128": "logo.png"
   },
   "manifest_version": 2,
-  "content_security_policy":
-    "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "web_accessible_resources": [
+    "inpage.bundle.js"
+  ]
 }
