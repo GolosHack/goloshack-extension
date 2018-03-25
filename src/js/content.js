@@ -1,5 +1,7 @@
 import PortStream from './libs/port-stream';
 import PostMessageStream from 'post-message-stream';
+let backgroundStream;
+let injectStream;
 
 console.log('content js');
 
@@ -10,6 +12,8 @@ function init() {
   setupInjection();
   connectToBackend();
   connectToInject();
+
+  setupStreams();
 }
 
 function setupInjection() {
@@ -25,24 +29,27 @@ function setupInjection() {
 }
 
 function connectToBackend() {
-  var port = chrome.extension.connect({
-    name: "content"
-  });
-  connectRemote(port);
-  function connectRemote(remotePort) {
-    const portStream = new PortStream(remotePort);
-
-    portStream.write('hello from content');
-    portStream.on('data', (data) => console.log('recieved content: ', data));
-  }
+  let backPort = chrome.extension.connect({ name: "content" });
+  backgroundStream = new PortStream(backPort);
+  // backgroundStream.write('hello from content');
+  // backgroundStream.on('data', (data) => console.log('recieved content: ', data));
 }
 
 function connectToInject() {
-  var injectStream = new PostMessageStream({
+  injectStream = new PostMessageStream({
     name: 'content',
     target: 'page',
   })
+  // injectStream.on('data', (data) => console.log('recieved content', data))
+  // injectStream.write('send from content')
+}
 
-  injectStream.on('data', (data) => console.log('recieved content', data))
-  injectStream.write('send from content')
+function setupStreams() {
+  injectStream.on('data', data => {
+    switch (data.type) {
+      case 'send_tx': {
+        backgroundStream.write(data);
+      }
+    }
+  })
 }

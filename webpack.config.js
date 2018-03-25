@@ -1,11 +1,11 @@
 var webpack = require("webpack"),
-    path = require("path"),
-    fileSystem = require("fs"),
-    env = require("./utils/env"),
-    CleanWebpackPlugin = require("clean-webpack-plugin"),
-    CopyWebpackPlugin = require("copy-webpack-plugin"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    WriteFilePlugin = require("write-file-webpack-plugin");
+  path = require("path"),
+  fileSystem = require("fs"),
+  env = require("./utils/env"),
+  CleanWebpackPlugin = require("clean-webpack-plugin"),
+  CopyWebpackPlugin = require("copy-webpack-plugin"),
+  HtmlWebpackPlugin = require("html-webpack-plugin"),
+  WriteFilePlugin = require("write-file-webpack-plugin");
 
 // load the secrets
 var alias = {};
@@ -21,6 +21,7 @@ if (fileSystem.existsSync(secretsPath)) {
 var options = {
   entry: {
     popup: path.join(__dirname, "src", "js", "popup.js"),
+    dialog: path.join(__dirname, "src", "js", "dialog.js"),
     inpage: path.join(__dirname, "src", "js", "inpage.js"),
     options: path.join(__dirname, "src", "js", "options.js"),
     content: path.join(__dirname, "src", "js", "content.js"),
@@ -85,6 +86,11 @@ var options = {
       template: path.join(__dirname, "src", "options.html"),
       filename: "options.html",
       chunks: ["options"]
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "dialog.html"),
+      filename: "dialog.html",
+      chunks: ["dialog"]
     }),
     new WriteFilePlugin()
   ]
